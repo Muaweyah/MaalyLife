@@ -10,6 +10,9 @@ import com.maaly.life.data.Task
 import com.maaly.life.data.TaskRepository
 import com.maaly.life.notifications.ReminderScheduler
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,7 +26,8 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     var currentDate: String = dateFormat.format(Date())
         private set
 
-    val categories: List<Category> = DefaultCategories.list
+    val visibleCategories: StateFlow<List<Category>> = categoryDao.getVisible()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         val dao = AppDatabase.getInstance(application).taskDao()

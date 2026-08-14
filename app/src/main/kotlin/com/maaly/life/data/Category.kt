@@ -9,5 +9,7 @@ data class Category(
     val nameAr: String,
     val nameEn: String,
     val icon: String,
-    val colorHex: String
+    val colorHex: String,
+    val isHidden: Boolean = false,
+    val isCustom: Boolean = false
 )

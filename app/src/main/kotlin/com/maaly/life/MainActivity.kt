@@ -18,7 +18,9 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.maaly.life.ui.TaskViewModel
 import com.maaly.life.ui.calendar.CalendarScreen
 import com.maaly.life.ui.focus.PomodoroScreen
+import com.maaly.life.ui.settings.SettingsScreen
 import com.maaly.life.ui.stats.StatsScreen
 import java.util.*
 
@@ -51,6 +54,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun AppRoot() {
     val navController = rememberNavController()
 
@@ -65,35 +69,50 @@ fun AppRoot() {
     }
 
     Scaffold(
+        topBar = {
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = backStackEntry?.destination?.route
+            if (currentRoute != "settings") {
+                TopAppBar(
+                    title = { Text("Maaly Life") },
+                    actions = {
+                        IconButton(onClick = { navController.navigate("settings") }) {
+                            Icon(Icons.Filled.Settings, contentDescription = "الإعدادات")
+                        }
+                    }
+                )
+            }
+        },
         bottomBar = {
-            NavigationBar {
-                val backStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = backStackEntry?.destination?.route
-
-                NavigationBarItem(
-                    selected = currentRoute == "daily",
-                    onClick = { navController.navigate("daily") },
-                    icon = { Icon(Icons.Filled.CheckCircle, contentDescription = "اليوم") },
-                    label = { Text("اليوم") }
-                )
-                NavigationBarItem(
-                    selected = currentRoute == "calendar",
-                    onClick = { navController.navigate("calendar") },
-                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "التقويم") },
-                    label = { Text("التقويم") }
-                )
-                NavigationBarItem(
-                    selected = currentRoute == "focus",
-                    onClick = { navController.navigate("focus") },
-                    icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "التركيز") },
-                    label = { Text("التركيز") }
-                )
-                NavigationBarItem(
-                    selected = currentRoute == "stats",
-                    onClick = { navController.navigate("stats") },
-                    icon = { Icon(Icons.Filled.List, contentDescription = "الإحصائيات") },
-                    label = { Text("الإحصائيات") }
-                )
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = backStackEntry?.destination?.route
+            if (currentRoute != "settings") {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = currentRoute == "daily",
+                        onClick = { navController.navigate("daily") },
+                        icon = { Icon(Icons.Filled.CheckCircle, contentDescription = "اليوم") },
+                        label = { Text("اليوم") }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "calendar",
+                        onClick = { navController.navigate("calendar") },
+                        icon = { Icon(Icons.Filled.DateRange, contentDescription = "التقويم") },
+                        label = { Text("التقويم") }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "focus",
+                        onClick = { navController.navigate("focus") },
+                        icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "التركيز") },
+                        label = { Text("التركيز") }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == "stats",
+                        onClick = { navController.navigate("stats") },
+                        icon = { Icon(Icons.Filled.List, contentDescription = "الإحصائيات") },
+                        label = { Text("الإحصائيات") }
+                    )
+                }
             }
         }
     ) { padding ->
@@ -106,6 +125,7 @@ fun AppRoot() {
             composable("calendar") { CalendarScreen() }
             composable("focus") { PomodoroScreen() }
             composable("stats") { StatsScreen() }
+            composable("settings") { SettingsScreen() }
         }
     }
 }
@@ -113,10 +133,17 @@ fun AppRoot() {
 @Composable
 fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
     val tasks by viewModel.tasksForCurrentDate().collectAsState(initial = emptyList())
+    val visibleCategories by viewModel.visibleCategories.collectAsState()
     var newTaskTitle by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(viewModel.categories.first()) }
+    var selectedCategory by remember { mutableStateOf<com.maaly.life.data.Category?>(null) }
     var expanded by remember { mutableStateOf(false) }
     var reminderTime by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(visibleCategories) {
+        if (selectedCategory == null && visibleCategories.isNotEmpty()) {
+            selectedCategory = visibleCategories.first()
+        }
+    }
 
     val context = LocalContext.current
     val calendar = remember { Calendar.getInstance() }
@@ -136,10 +163,10 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
         Row {
             Box {
                 OutlinedButton(onClick = { expanded = true }) {
-                    Text(text = "${selectedCategory.icon} ${selectedCategory.nameAr}")
+                    Text(text = selectedCategory?.let { "${it.icon} ${it.nameAr}" } ?: "اختر تصنيف")
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    viewModel.categories.forEach { cat ->
+                    visibleCategories.forEach { cat ->
                         DropdownMenuItem(
                             text = { Text("${cat.icon} ${cat.nameAr}") },
                             onClick = {
@@ -174,8 +201,9 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
 
         Button(
             onClick = {
-                if (newTaskTitle.isNotBlank()) {
-                    viewModel.addTask(newTaskTitle, selectedCategory.id, reminderTime)
+                val cat = selectedCategory
+                if (newTaskTitle.isNotBlank() && cat != null) {
+                    viewModel.addTask(newTaskTitle, cat.id, reminderTime)
                     newTaskTitle = ""
                     reminderTime = null
                 }
@@ -190,7 +218,7 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
         } else {
             LazyColumn {
                 items(tasks) { task ->
-                    val cat = viewModel.categories.find { it.id == task.category }
+                    val cat = visibleCategories.find { it.id == task.category }
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically,
