@@ -8,6 +8,7 @@ import com.maaly.life.data.Category
 import com.maaly.life.data.DefaultCategories
 import com.maaly.life.data.Task
 import com.maaly.life.data.TaskRepository
+import com.maaly.life.notifications.ReminderScheduler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -17,6 +18,7 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: TaskRepository
     private val categoryDao = AppDatabase.getInstance(application).categoryDao()
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val appContext = application.applicationContext
 
     var currentDate: String = dateFormat.format(Date())
         private set
@@ -33,23 +35,27 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     fun tasksForCurrentDate(): Flow<List<Task>> = repository.getTasksForDate(currentDate)
 
-    fun addTask(title: String, categoryId: String) {
+    fun addTask(title: String, categoryId: String, reminderTime: String?) {
         viewModelScope.launch {
-            repository.addTask(
-                Task(title = title, category = categoryId, date = currentDate)
+            val newId = repository.addTask(
+                Task(title = title, category = categoryId, date = currentDate, reminderTime = reminderTime)
             )
-        }
-    }
-
-    fun deleteTask(task: Task) {
-        viewModelScope.launch {
-            repository.deleteTask(task)
+            if (reminderTime != null) {
+                ReminderScheduler.schedule(appContext, newId, title, currentDate, reminderTime)
+            }
         }
     }
 
     fun toggleTask(task: Task) {
         viewModelScope.launch {
             repository.updateTask(task.copy(isCompleted = !task.isCompleted))
+        }
+    }
+
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            repository.deleteTask(task)
+            ReminderScheduler.cancel(appContext, task.id)
         }
     }
 }
