@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.roundToInt
@@ -20,10 +19,16 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
     val period by viewModel.period.collectAsState()
     val stats by viewModel.categoryStats.collectAsState()
     val overallRatio by viewModel.overallRatio.collectAsState()
+    val streak by viewModel.streak.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "الإحصائيات", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
+
+        if (streak > 0) {
+            StreakBanner(streak)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
         Row {
             FilterChip(
@@ -53,6 +58,22 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
         } else {
             stats.forEach { stat -> CategoryRow(stat) }
         }
+    }
+}
+
+@Composable
+private fun StreakBanner(streak: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xFFFFF3E0))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = "🔥", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = "$streak يوم متتالي من إنجاز كل المهام")
     }
 }
 

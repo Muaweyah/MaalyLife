@@ -26,8 +26,12 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
     private val _overallRatio = MutableStateFlow(0f)
     val overallRatio: StateFlow<Float> = _overallRatio
 
+    private val _streak = MutableStateFlow(0)
+    val streak: StateFlow<Int> = _streak
+
     init {
         load()
+        loadStreak()
     }
 
     fun setPeriod(newPeriod: StatsPeriod) {
@@ -63,6 +67,25 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
 
             _overallRatio.value = if (tasks.isEmpty()) 0f
                 else tasks.count { it.isCompleted }.toFloat() / tasks.size
+        }
+    }
+
+    private fun loadStreak() {
+        viewModelScope.launch {
+            var streakCount = 0
+            val cal = Calendar.getInstance()
+
+            while (true) {
+                val dateStr = dateFormat.format(cal.time)
+                val total = dao.getTotalCount(dateStr)
+                val completed = dao.getCompletedCount(dateStr)
+
+                if (total == 0 || completed < total) break
+
+                streakCount++
+                cal.add(Calendar.DAY_OF_YEAR, -1)
+            }
+            _streak.value = streakCount
         }
     }
 }
