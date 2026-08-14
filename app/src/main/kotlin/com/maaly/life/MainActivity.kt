@@ -6,12 +6,20 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.maaly.life.ui.TaskViewModel
+import com.maaly.life.ui.calendar.CalendarScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,9 +27,45 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    DailyScreen()
+                    AppRoot()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun AppRoot() {
+    val navController = rememberNavController()
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                val backStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = backStackEntry?.destination?.route
+
+                NavigationBarItem(
+                    selected = currentRoute == "daily",
+                    onClick = { navController.navigate("daily") },
+                    icon = { Icon(Icons.Filled.CheckCircle, contentDescription = "اليوم") },
+                    label = { Text("اليوم") }
+                )
+                NavigationBarItem(
+                    selected = currentRoute == "calendar",
+                    onClick = { navController.navigate("calendar") },
+                    icon = { Icon(Icons.Filled.DateRange, contentDescription = "التقويم") },
+                    label = { Text("التقويم") }
+                )
+            }
+        }
+    ) { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = "daily",
+            modifier = Modifier.padding(padding)
+        ) {
+            composable("daily") { DailyScreen() }
+            composable("calendar") { CalendarScreen() }
         }
     }
 }

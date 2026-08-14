@@ -252,6 +252,78 @@ public final class TaskDao_Impl implements TaskDao {
   }
 
   @Override
+  public Object getTasksInRange(final String startDate, final String endDate,
+      final Continuation<? super List<Task>> $completion) {
+    final String _sql = "SELECT * FROM tasks WHERE date BETWEEN ? AND ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 2);
+    int _argIndex = 1;
+    _statement.bindString(_argIndex, startDate);
+    _argIndex = 2;
+    _statement.bindString(_argIndex, endDate);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<Task>>() {
+      @Override
+      @NonNull
+      public List<Task> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfTitle = CursorUtil.getColumnIndexOrThrow(_cursor, "title");
+          final int _cursorIndexOfCategory = CursorUtil.getColumnIndexOrThrow(_cursor, "category");
+          final int _cursorIndexOfPriority = CursorUtil.getColumnIndexOrThrow(_cursor, "priority");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "date");
+          final int _cursorIndexOfIsCompleted = CursorUtil.getColumnIndexOrThrow(_cursor, "isCompleted");
+          final int _cursorIndexOfReminderTime = CursorUtil.getColumnIndexOrThrow(_cursor, "reminderTime");
+          final int _cursorIndexOfRepeatRule = CursorUtil.getColumnIndexOrThrow(_cursor, "repeatRule");
+          final int _cursorIndexOfCustomSound = CursorUtil.getColumnIndexOrThrow(_cursor, "customSound");
+          final List<Task> _result = new ArrayList<Task>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final Task _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpTitle;
+            _tmpTitle = _cursor.getString(_cursorIndexOfTitle);
+            final String _tmpCategory;
+            _tmpCategory = _cursor.getString(_cursorIndexOfCategory);
+            final int _tmpPriority;
+            _tmpPriority = _cursor.getInt(_cursorIndexOfPriority);
+            final String _tmpDate;
+            _tmpDate = _cursor.getString(_cursorIndexOfDate);
+            final boolean _tmpIsCompleted;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsCompleted);
+            _tmpIsCompleted = _tmp != 0;
+            final String _tmpReminderTime;
+            if (_cursor.isNull(_cursorIndexOfReminderTime)) {
+              _tmpReminderTime = null;
+            } else {
+              _tmpReminderTime = _cursor.getString(_cursorIndexOfReminderTime);
+            }
+            final String _tmpRepeatRule;
+            if (_cursor.isNull(_cursorIndexOfRepeatRule)) {
+              _tmpRepeatRule = null;
+            } else {
+              _tmpRepeatRule = _cursor.getString(_cursorIndexOfRepeatRule);
+            }
+            final String _tmpCustomSound;
+            if (_cursor.isNull(_cursorIndexOfCustomSound)) {
+              _tmpCustomSound = null;
+            } else {
+              _tmpCustomSound = _cursor.getString(_cursorIndexOfCustomSound);
+            }
+            _item = new Task(_tmpId,_tmpTitle,_tmpCategory,_tmpPriority,_tmpDate,_tmpIsCompleted,_tmpReminderTime,_tmpRepeatRule,_tmpCustomSound);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object getCompletedCount(final String date,
       final Continuation<? super Integer> $completion) {
     final String _sql = "SELECT COUNT(*) FROM tasks WHERE date = ? AND isCompleted = 1";
