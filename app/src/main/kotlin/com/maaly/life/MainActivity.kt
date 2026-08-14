@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.maaly.life.ui.TaskViewModel
 import com.maaly.life.ui.calendar.CalendarScreen
+import com.maaly.life.ui.stats.StatsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +58,12 @@ fun AppRoot() {
                     icon = { Icon(Icons.Filled.DateRange, contentDescription = "التقويم") },
                     label = { Text("التقويم") }
                 )
+                NavigationBarItem(
+                    selected = currentRoute == "stats",
+                    onClick = { navController.navigate("stats") },
+                    icon = { Icon(Icons.Filled.List, contentDescription = "الإحصائيات") },
+                    label = { Text("الإحصائيات") }
+                )
             }
         }
     ) { padding ->
@@ -66,6 +74,7 @@ fun AppRoot() {
         ) {
             composable("daily") { DailyScreen() }
             composable("calendar") { CalendarScreen() }
+            composable("stats") { StatsScreen() }
         }
     }
 }
