@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
+fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsViewModel = viewModel()) {
     val categories by viewModel.categories.collectAsState()
     val language by viewModel.language.collectAsState()
     val themeMode by viewModel.themeMode.collectAsState()
@@ -66,19 +66,19 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
             Row {
                 FilterChip(
                     selected = themeMode == "system",
-                    onClick = { viewModel.setThemeMode("system") },
+                    onClick = { viewModel.setThemeMode("system"); onThemeChanged("system") },
                     label = { Text("تلقائي") },
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 FilterChip(
                     selected = themeMode == "light",
-                    onClick = { viewModel.setThemeMode("light") },
+                    onClick = { viewModel.setThemeMode("light"); onThemeChanged("light") },
                     label = { Text("فاتح") },
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 FilterChip(
                     selected = themeMode == "dark",
-                    onClick = { viewModel.setThemeMode("dark") },
+                    onClick = { viewModel.setThemeMode("dark"); onThemeChanged("dark") },
                     label = { Text("داكن") }
                 )
             }

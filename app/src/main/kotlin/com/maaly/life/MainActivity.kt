@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.maaly.life.data.AppSettings
 import com.maaly.life.ui.TaskViewModel
 import com.maaly.life.ui.calendar.CalendarScreen
 import com.maaly.life.ui.focus.PomodoroScreen
@@ -42,20 +42,29 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val settings = remember { AppSettings(applicationContext) }
+            var themeMode by remember { mutableStateOf(settings.themeMode) }
+
+            val useDarkTheme = when (themeMode) {
+                "dark" -> true
+                "light" -> false
+                else -> isSystemInDarkTheme()
+            }
+
             MaterialTheme(
-                colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+                colorScheme = if (useDarkTheme) darkColorScheme() else lightColorScheme()
             ) {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppRoot()
+                    AppRoot(onThemeChanged = { themeMode = it })
                 }
             }
         }
     }
 }
 
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun AppRoot() {
+@Composable
+fun AppRoot(onThemeChanged: (String) -> Unit) {
     val navController = rememberNavController()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -125,7 +134,7 @@ fun AppRoot() {
             composable("calendar") { CalendarScreen() }
             composable("focus") { PomodoroScreen() }
             composable("stats") { StatsScreen() }
-            composable("settings") { SettingsScreen() }
+            composable("settings") { SettingsScreen(onThemeChanged = onThemeChanged) }
         }
     }
 }

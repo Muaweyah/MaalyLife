@@ -1,6 +1,8 @@
 package com.maaly.life.ui.settings
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.maaly.life.data.AppDatabase
@@ -36,6 +38,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setLanguage(lang: String) {
         settings.language = lang
         _language.value = lang
+        val locales = LocaleListCompat.forLanguageTags(lang)
+        AppCompatDelegate.setApplicationLocales(locales)
     }
 
     fun setThemeMode(mode: String) {
@@ -70,7 +74,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // مكان مستقبلي: ربط فعلي بتسجيل دخول Google (يحتاج إعداد Firebase)
     fun signOut() {
         settings.isSignedIn = false
         settings.userEmail = null
