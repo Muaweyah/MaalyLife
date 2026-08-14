@@ -41,6 +41,12 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteTask(task: Task) {
+        viewModelScope.launch {
+            repository.deleteTask(task)
+        }
+    }
+
     fun toggleTask(task: Task) {
         viewModelScope.launch {
             repository.updateTask(task.copy(isCompleted = !task.isCompleted))
