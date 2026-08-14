@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.maaly.life.ui.TaskViewModel
 import com.maaly.life.ui.calendar.CalendarScreen
+import com.maaly.life.ui.focus.PomodoroScreen
 import com.maaly.life.ui.stats.StatsScreen
 import java.util.*
 
@@ -51,7 +53,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppRoot() {
     val navController = rememberNavController()
-    val context = LocalContext.current
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -82,6 +83,12 @@ fun AppRoot() {
                     label = { Text("التقويم") }
                 )
                 NavigationBarItem(
+                    selected = currentRoute == "focus",
+                    onClick = { navController.navigate("focus") },
+                    icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "التركيز") },
+                    label = { Text("التركيز") }
+                )
+                NavigationBarItem(
                     selected = currentRoute == "stats",
                     onClick = { navController.navigate("stats") },
                     icon = { Icon(Icons.Filled.List, contentDescription = "الإحصائيات") },
@@ -97,6 +104,7 @@ fun AppRoot() {
         ) {
             composable("daily") { DailyScreen() }
             composable("calendar") { CalendarScreen() }
+            composable("focus") { PomodoroScreen() }
             composable("stats") { StatsScreen() }
         }
     }

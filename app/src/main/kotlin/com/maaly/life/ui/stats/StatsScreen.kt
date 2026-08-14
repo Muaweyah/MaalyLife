@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.maaly.life.ui.rewards.RewardsCalculator
 import kotlin.math.roundToInt
 
 @Composable
@@ -21,14 +22,21 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
     val overallRatio by viewModel.overallRatio.collectAsState()
     val streak by viewModel.streak.collectAsState()
 
+    val totalCompleted = stats.sumOf { it.completed }
+    val points = RewardsCalculator.pointsFor(totalCompleted)
+    val badge = RewardsCalculator.badgeFor(streak)
+
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = "الإحصائيات", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
 
         if (streak > 0) {
             StreakBanner(streak)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
+
+        PointsAndBadgeCard(points, badge)
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row {
             FilterChip(
@@ -57,6 +65,23 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
             Text(text = "لا توجد بيانات لهذه الفترة بعد")
         } else {
             stats.forEach { stat -> CategoryRow(stat) }
+        }
+    }
+}
+
+@Composable
+private fun PointsAndBadgeCard(points: Int, badge: String?) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xFFE8F5E9))
+            .padding(12.dp)
+    ) {
+        Text(text = "🌟 $points نقطة")
+        if (badge != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = badge)
         }
     }
 }
