@@ -7,8 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.maaly.life.R
 
 @Composable
 fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsViewModel = viewModel()) {
@@ -23,72 +25,72 @@ fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsVie
 
     LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         item {
-            Text(text = "الإعدادات", style = MaterialTheme.typography.headlineMedium)
+            Text(text = stringResource(R.string.settings_title), style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(20.dp))
         }
 
         item {
-            SectionTitle("الحساب")
+            SectionTitle(stringResource(R.string.settings_account))
             if (isSignedIn) {
-                Text(text = "مسجل الدخول: ${userEmail ?: ""}")
+                Text(text = stringResource(R.string.settings_signed_in, userEmail ?: ""))
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = { viewModel.signOut() }) { Text("تسجيل الخروج") }
+                OutlinedButton(onClick = { viewModel.signOut() }) { Text(stringResource(R.string.settings_sign_out)) }
             } else {
-                Text(text = "غير مسجل الدخول")
+                Text(text = stringResource(R.string.settings_not_signed_in))
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(onClick = { /* سيُفعّل لاحقاً عبر Google Sign-In */ }) {
-                    Text("تسجيل الدخول عبر جوجل (قريباً)")
+                    Text(stringResource(R.string.settings_sign_in_google))
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
 
         item {
-            SectionTitle("اللغة")
+            SectionTitle(stringResource(R.string.settings_language))
             Row {
                 FilterChip(
                     selected = language == "ar",
                     onClick = { viewModel.setLanguage("ar") },
-                    label = { Text("العربية") },
+                    label = { Text(stringResource(R.string.settings_lang_ar)) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 FilterChip(
                     selected = language == "en",
                     onClick = { viewModel.setLanguage("en") },
-                    label = { Text("English") }
+                    label = { Text(stringResource(R.string.settings_lang_en)) }
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
 
         item {
-            SectionTitle("المظهر")
+            SectionTitle(stringResource(R.string.settings_theme))
             Row {
                 FilterChip(
                     selected = themeMode == "system",
                     onClick = { viewModel.setThemeMode("system"); onThemeChanged("system") },
-                    label = { Text("تلقائي") },
+                    label = { Text(stringResource(R.string.settings_theme_system)) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 FilterChip(
                     selected = themeMode == "light",
                     onClick = { viewModel.setThemeMode("light"); onThemeChanged("light") },
-                    label = { Text("فاتح") },
+                    label = { Text(stringResource(R.string.settings_theme_light)) },
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 FilterChip(
                     selected = themeMode == "dark",
                     onClick = { viewModel.setThemeMode("dark"); onThemeChanged("dark") },
-                    label = { Text("داكن") }
+                    label = { Text(stringResource(R.string.settings_theme_dark)) }
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
         }
 
         item {
-            SectionTitle("التصنيفات")
+            SectionTitle(stringResource(R.string.settings_categories))
             Text(
-                text = "فعّل أو أخفِ أي تصنيف، أو أضف تصنيفك الخاص",
+                text = stringResource(R.string.settings_categories_hint),
                 style = MaterialTheme.typography.bodySmall
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -108,7 +110,7 @@ fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsVie
                     )
                     if (cat.isCustom) {
                         TextButton(onClick = { viewModel.deleteCustomCategory(cat) }) {
-                            Text("حذف")
+                            Text(stringResource(R.string.settings_delete))
                         }
                     }
                 }
@@ -122,14 +124,14 @@ fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsVie
                     value = newCatIcon,
                     onValueChange = { if (it.length <= 2) newCatIcon = it },
                     modifier = Modifier.width(70.dp),
-                    label = { Text("رمز") }
+                    label = { Text(stringResource(R.string.settings_new_category_icon)) }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 OutlinedTextField(
                     value = newCatName,
                     onValueChange = { newCatName = it },
                     modifier = Modifier.weight(1f),
-                    label = { Text("تصنيف جديد") }
+                    label = { Text(stringResource(R.string.settings_new_category_name)) }
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -142,7 +144,7 @@ fun SettingsScreen(onThemeChanged: (String) -> Unit = {}, viewModel: SettingsVie
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("إضافة تصنيف") }
+            ) { Text(stringResource(R.string.settings_add_category)) }
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

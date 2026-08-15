@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -16,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.maaly.life.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +30,7 @@ fun CalendarScreen(viewModel: CalendarViewModel = viewModel()) {
     val dayStatuses by viewModel.dayStatuses.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "التقويم", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.calendar_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
 
         ModeSelector(mode = mode, onModeChange = { viewModel.setMode(it) })
@@ -55,10 +56,10 @@ fun CalendarScreen(viewModel: CalendarViewModel = viewModel()) {
 @Composable
 private fun ModeSelector(mode: CalendarMode, onModeChange: (CalendarMode) -> Unit) {
     val labels = mapOf(
-        CalendarMode.DAY to "يومي",
-        CalendarMode.WEEK to "أسبوعي",
-        CalendarMode.MONTH to "شهري",
-        CalendarMode.YEAR to "سنوي"
+        CalendarMode.DAY to stringResource(R.string.calendar_day),
+        CalendarMode.WEEK to stringResource(R.string.calendar_week),
+        CalendarMode.MONTH to stringResource(R.string.calendar_month),
+        CalendarMode.YEAR to stringResource(R.string.calendar_year)
     )
     Row(modifier = Modifier.fillMaxWidth()) {
         labels.forEach { (m, label) ->
@@ -80,11 +81,12 @@ private fun PeriodHeader(
     onPrevious: () -> Unit,
     onNext: () -> Unit
 ) {
+    val locale = Locale("ar")
     val label = when (mode) {
-        CalendarMode.DAY -> SimpleDateFormat("EEEE، d MMMM yyyy", Locale("ar")).format(referenceDate.time)
-        CalendarMode.WEEK -> "الأسبوع — " + SimpleDateFormat("d MMMM", Locale("ar")).format(referenceDate.time)
-        CalendarMode.MONTH -> SimpleDateFormat("MMMM yyyy", Locale("ar")).format(referenceDate.time)
-        CalendarMode.YEAR -> SimpleDateFormat("yyyy", Locale("ar")).format(referenceDate.time)
+        CalendarMode.DAY -> SimpleDateFormat("EEEE، d MMMM yyyy", locale).format(referenceDate.time)
+        CalendarMode.WEEK -> "الأسبوع — " + SimpleDateFormat("d MMMM", locale).format(referenceDate.time)
+        CalendarMode.MONTH -> SimpleDateFormat("MMMM yyyy", locale).format(referenceDate.time)
+        CalendarMode.YEAR -> SimpleDateFormat("yyyy", locale).format(referenceDate.time)
     }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -92,11 +94,11 @@ private fun PeriodHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onPrevious) {
-            Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "السابق")
+            Icon(Icons.Filled.KeyboardArrowRight, contentDescription = null)
         }
         Text(text = label, style = MaterialTheme.typography.titleMedium)
         IconButton(onClick = onNext) {
-            Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = "التالي")
+            Icon(Icons.Filled.KeyboardArrowLeft, contentDescription = null)
         }
     }
 }
@@ -155,11 +157,11 @@ private fun YearHeatmap(days: List<DayStatus>) {
 @Composable
 private fun DayDetailView(day: DayStatus?) {
     if (day == null) {
-        Text(text = "لا توجد بيانات")
+        Text(text = stringResource(R.string.calendar_no_data))
         return
     }
     Column {
-        Text(text = "المهام: ${day.completedTasks} من ${day.totalTasks}")
+        Text(text = stringResource(R.string.calendar_tasks_ratio, day.completedTasks, day.totalTasks))
         Spacer(modifier = Modifier.height(8.dp))
         Box(
             modifier = Modifier

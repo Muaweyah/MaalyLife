@@ -1,3 +1,60 @@
 <resources>
     <string name="app_name">Maaly Life</string>
+
+    <string name="nav_today">اليوم</string>
+    <string name="nav_calendar">التقويم</string>
+    <string name="nav_focus">التركيز</string>
+    <string name="nav_stats">الإحصائيات</string>
+
+    <string name="daily_title">مهام اليوم</string>
+    <string name="daily_new_task">مهمة جديدة</string>
+    <string name="daily_choose_category">اختر تصنيف</string>
+    <string name="daily_no_reminder">بدون تنبيه</string>
+    <string name="daily_add">إضافة</string>
+    <string name="daily_empty">لا توجد مهام بعد — أضف أول مهمة لك</string>
+
+    <string name="calendar_title">التقويم</string>
+    <string name="calendar_day">يومي</string>
+    <string name="calendar_week">أسبوعي</string>
+    <string name="calendar_month">شهري</string>
+    <string name="calendar_year">سنوي</string>
+    <string name="calendar_no_data">لا توجد بيانات</string>
+    <string name="calendar_tasks_ratio">المهام: %1$d من %2$d</string>
+
+    <string name="focus_title">مؤقت التركيز</string>
+    <string name="focus_work">وقت التركيز</string>
+    <string name="focus_break">وقت الاستراحة</string>
+    <string name="focus_idle">جاهز للبدء</string>
+    <string name="focus_start">ابدأ</string>
+    <string name="focus_pause">إيقاف مؤقت</string>
+    <string name="focus_reset">إعادة تعيين</string>
+
+    <string name="stats_title">الإحصائيات</string>
+    <string name="stats_week">أسبوعي</string>
+    <string name="stats_month">شهري</string>
+    <string name="stats_streak">%1$d يوم متتالي من إنجاز كل المهام</string>
+    <string name="stats_points">🌟 %1$d نقطة</string>
+    <string name="stats_overall">نسبة الإنجاز الإجمالية لهذه الفترة</string>
+    <string name="stats_by_category">نسبة الإنجاز حسب التصنيف</string>
+    <string name="stats_empty">لا توجد بيانات لهذه الفترة بعد</string>
+
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_account">الحساب</string>
+    <string name="settings_signed_in">مسجل الدخول: %1$s</string>
+    <string name="settings_not_signed_in">غير مسجل الدخول</string>
+    <string name="settings_sign_out">تسجيل الخروج</string>
+    <string name="settings_sign_in_google">تسجيل الدخول عبر جوجل (قريباً)</string>
+    <string name="settings_language">اللغة</string>
+    <string name="settings_lang_ar">العربية</string>
+    <string name="settings_lang_en">English</string>
+    <string name="settings_theme">المظهر</string>
+    <string name="settings_theme_system">تلقائي</string>
+    <string name="settings_theme_light">فاتح</string>
+    <string name="settings_theme_dark">داكن</string>
+    <string name="settings_categories">التصنيفات</string>
+    <string name="settings_categories_hint">فعّل أو أخفِ أي تصنيف، أو أضف تصنيفك الخاص</string>
+    <string name="settings_delete">حذف</string>
+    <string name="settings_new_category_icon">رمز</string>
+    <string name="settings_new_category_name">تصنيف جديد</string>
+    <string name="settings_add_category">إضافة تصنيف</string>
 </resources>

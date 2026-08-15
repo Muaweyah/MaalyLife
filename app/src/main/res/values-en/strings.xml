@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Maaly Life</string>
+
+    <string name="nav_today">Today</string>
+    <string name="nav_calendar">Calendar</string>
+    <string name="nav_focus">Focus</string>
+    <string name="nav_stats">Stats</string>
+
+    <string name="daily_title">Today\'s Tasks</string>
+    <string name="daily_new_task">New task</string>
+    <string name="daily_choose_category">Choose category</string>
+    <string name="daily_no_reminder">No reminder</string>
+    <string name="daily_add">Add</string>
+    <string name="daily_empty">No tasks yet — add your first task</string>
+
+    <string name="calendar_title">Calendar</string>
+    <string name="calendar_day">Day</string>
+    <string name="calendar_week">Week</string>
+    <string name="calendar_month">Month</string>
+    <string name="calendar_year">Year</string>
+    <string name="calendar_no_data">No data</string>
+    <string name="calendar_tasks_ratio">Tasks: %1$d of %2$d</string>
+
+    <string name="focus_title">Focus Timer</string>
+    <string name="focus_work">Focus time</string>
+    <string name="focus_break">Break time</string>
+    <string name="focus_idle">Ready to start</string>
+    <string name="focus_start">Start</string>
+    <string name="focus_pause">Pause</string>
+    <string name="focus_reset">Reset</string>
+
+    <string name="stats_title">Statistics</string>
+    <string name="stats_week">Weekly</string>
+    <string name="stats_month">Monthly</string>
+    <string name="stats_streak">%1$d day streak of completing all tasks</string>
+    <string name="stats_points">🌟 %1$d points</string>
+    <string name="stats_overall">Overall completion rate for this period</string>
+    <string name="stats_by_category">Completion rate by category</string>
+    <string name="stats_empty">No data for this period yet</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_account">Account</string>
+    <string name="settings_signed_in">Signed in: %1$s</string>
+    <string name="settings_not_signed_in">Not signed in</string>
+    <string name="settings_sign_out">Sign out</string>
+    <string name="settings_sign_in_google">Sign in with Google (coming soon)</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_lang_ar">العربية</string>
+    <string name="settings_lang_en">English</string>
+    <string name="settings_theme">Appearance</string>
+    <string name="settings_theme_system">Automatic</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_categories">Categories</string>
+    <string name="settings_categories_hint">Enable or hide any category, or add your own</string>
+    <string name="settings_delete">Delete</string>
+    <string name="settings_new_category_icon">Icon</string>
+    <string name="settings_new_category_name">New category</string>
+    <string name="settings_add_category">Add category</string>
+</resources>

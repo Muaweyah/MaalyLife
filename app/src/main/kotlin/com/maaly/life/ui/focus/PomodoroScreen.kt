@@ -5,10 +5,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.maaly.life.R
 
 @Composable
 fun PomodoroScreen(viewModel: PomodoroViewModel = viewModel()) {
@@ -20,9 +22,9 @@ fun PomodoroScreen(viewModel: PomodoroViewModel = viewModel()) {
     val seconds = secondsLeft % 60
 
     val phaseLabel = when (phase) {
-        PomodoroPhase.WORK -> "وقت التركيز"
-        PomodoroPhase.BREAK -> "وقت الاستراحة"
-        PomodoroPhase.IDLE -> "جاهز للبدء"
+        PomodoroPhase.WORK -> stringResource(R.string.focus_work)
+        PomodoroPhase.BREAK -> stringResource(R.string.focus_break)
+        PomodoroPhase.IDLE -> stringResource(R.string.focus_idle)
     }
 
     Column(
@@ -30,7 +32,7 @@ fun PomodoroScreen(viewModel: PomodoroViewModel = viewModel()) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "مؤقت التركيز", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.focus_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(24.dp))
         Text(text = phaseLabel, style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(16.dp))
@@ -42,12 +44,12 @@ fun PomodoroScreen(viewModel: PomodoroViewModel = viewModel()) {
         Spacer(modifier = Modifier.height(32.dp))
         Row {
             if (!isRunning) {
-                Button(onClick = { viewModel.start() }) { Text("ابدأ") }
+                Button(onClick = { viewModel.start() }) { Text(stringResource(R.string.focus_start)) }
             } else {
-                Button(onClick = { viewModel.pause() }) { Text("إيقاف مؤقت") }
+                Button(onClick = { viewModel.pause() }) { Text(stringResource(R.string.focus_pause)) }
             }
             Spacer(modifier = Modifier.width(12.dp))
-            OutlinedButton(onClick = { viewModel.reset() }) { Text("إعادة تعيين") }
+            OutlinedButton(onClick = { viewModel.reset() }) { Text(stringResource(R.string.focus_reset)) }
         }
     }
 }

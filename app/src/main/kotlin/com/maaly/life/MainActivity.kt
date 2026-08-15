@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -83,10 +84,10 @@ fun AppRoot(onThemeChanged: (String) -> Unit) {
             val currentRoute = backStackEntry?.destination?.route
             if (currentRoute != "settings") {
                 TopAppBar(
-                    title = { Text("Maaly Life") },
+                    title = { Text(stringResource(R.string.app_name)) },
                     actions = {
                         IconButton(onClick = { navController.navigate("settings") }) {
-                            Icon(Icons.Filled.Settings, contentDescription = "الإعدادات")
+                            Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings_title))
                         }
                     }
                 )
@@ -100,26 +101,26 @@ fun AppRoot(onThemeChanged: (String) -> Unit) {
                     NavigationBarItem(
                         selected = currentRoute == "daily",
                         onClick = { navController.navigate("daily") },
-                        icon = { Icon(Icons.Filled.CheckCircle, contentDescription = "اليوم") },
-                        label = { Text("اليوم") }
+                        icon = { Icon(Icons.Filled.CheckCircle, contentDescription = stringResource(R.string.nav_today)) },
+                        label = { Text(stringResource(R.string.nav_today)) }
                     )
                     NavigationBarItem(
                         selected = currentRoute == "calendar",
                         onClick = { navController.navigate("calendar") },
-                        icon = { Icon(Icons.Filled.DateRange, contentDescription = "التقويم") },
-                        label = { Text("التقويم") }
+                        icon = { Icon(Icons.Filled.DateRange, contentDescription = stringResource(R.string.nav_calendar)) },
+                        label = { Text(stringResource(R.string.nav_calendar)) }
                     )
                     NavigationBarItem(
                         selected = currentRoute == "focus",
                         onClick = { navController.navigate("focus") },
-                        icon = { Icon(Icons.Filled.PlayArrow, contentDescription = "التركيز") },
-                        label = { Text("التركيز") }
+                        icon = { Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.nav_focus)) },
+                        label = { Text(stringResource(R.string.nav_focus)) }
                     )
                     NavigationBarItem(
                         selected = currentRoute == "stats",
                         onClick = { navController.navigate("stats") },
-                        icon = { Icon(Icons.Filled.List, contentDescription = "الإحصائيات") },
-                        label = { Text("الإحصائيات") }
+                        icon = { Icon(Icons.Filled.List, contentDescription = stringResource(R.string.nav_stats)) },
+                        label = { Text(stringResource(R.string.nav_stats)) }
                     )
                 }
             }
@@ -156,23 +157,25 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
 
     val context = LocalContext.current
     val calendar = remember { Calendar.getInstance() }
+    val chooseCategoryText = stringResource(R.string.daily_choose_category)
+    val noReminderText = stringResource(R.string.daily_no_reminder)
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "مهام اليوم", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.daily_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
             value = newTaskTitle,
             onValueChange = { newTaskTitle = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("مهمة جديدة") }
+            label = { Text(stringResource(R.string.daily_new_task)) }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
             Box {
                 OutlinedButton(onClick = { expanded = true }) {
-                    Text(text = selectedCategory?.let { "${it.icon} ${it.nameAr}" } ?: "اختر تصنيف")
+                    Text(text = selectedCategory?.let { "${it.icon} ${it.nameAr}" } ?: chooseCategoryText)
                 }
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     visibleCategories.forEach { cat ->
@@ -200,9 +203,9 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
                     true
                 ).show()
             }) {
-                Icon(Icons.Filled.Notifications, contentDescription = "تنبيه")
+                Icon(Icons.Filled.Notifications, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = reminderTime ?: "بدون تنبيه")
+                Text(text = reminderTime ?: noReminderText)
             }
         }
 
@@ -218,12 +221,12 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
                 }
             },
             modifier = Modifier.fillMaxWidth()
-        ) { Text("إضافة") }
+        ) { Text(stringResource(R.string.daily_add)) }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         if (tasks.isEmpty()) {
-            Text(text = "لا توجد مهام بعد — أضف أول مهمة لك")
+            Text(text = stringResource(R.string.daily_empty))
         } else {
             LazyColumn {
                 items(tasks) { task ->
@@ -249,7 +252,7 @@ fun DailyScreen(viewModel: TaskViewModel = viewModel()) {
                             }
                         }
                         IconButton(onClick = { viewModel.deleteTask(task) }) {
-                            Icon(Icons.Filled.Close, contentDescription = "حذف")
+                            Icon(Icons.Filled.Close, contentDescription = null)
                         }
                     }
                 }

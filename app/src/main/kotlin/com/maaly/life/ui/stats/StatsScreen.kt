@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.maaly.life.R
 import com.maaly.life.ui.rewards.RewardsCalculator
 import kotlin.math.roundToInt
 
@@ -27,7 +29,7 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
     val badge = RewardsCalculator.badgeFor(streak)
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text(text = "الإحصائيات", style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(R.string.stats_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
 
         if (streak > 0) {
@@ -42,13 +44,13 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
             FilterChip(
                 selected = period == StatsPeriod.WEEK,
                 onClick = { viewModel.setPeriod(StatsPeriod.WEEK) },
-                label = { Text("أسبوعي") },
+                label = { Text(stringResource(R.string.stats_week)) },
                 modifier = Modifier.padding(end = 6.dp)
             )
             FilterChip(
                 selected = period == StatsPeriod.MONTH,
                 onClick = { viewModel.setPeriod(StatsPeriod.MONTH) },
-                label = { Text("شهري") }
+                label = { Text(stringResource(R.string.stats_month)) }
             )
         }
 
@@ -58,11 +60,11 @@ fun StatsScreen(viewModel: StatsViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "نسبة الإنجاز حسب التصنيف", style = MaterialTheme.typography.titleMedium)
+        Text(text = stringResource(R.string.stats_by_category), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (stats.isEmpty()) {
-            Text(text = "لا توجد بيانات لهذه الفترة بعد")
+            Text(text = stringResource(R.string.stats_empty))
         } else {
             stats.forEach { stat -> CategoryRow(stat) }
         }
@@ -78,7 +80,7 @@ private fun PointsAndBadgeCard(points: Int, badge: String?) {
             .background(Color(0xFFE8F5E9))
             .padding(12.dp)
     ) {
-        Text(text = "🌟 $points نقطة")
+        Text(text = stringResource(R.string.stats_points, points))
         if (badge != null) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = badge)
@@ -98,7 +100,7 @@ private fun StreakBanner(streak: Int) {
     ) {
         Text(text = "🔥", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "$streak يوم متتالي من إنجاز كل المهام")
+        Text(text = stringResource(R.string.stats_streak, streak))
     }
 }
 
@@ -126,7 +128,7 @@ private fun OverallCard(ratio: Float) {
             )
         }
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text = "نسبة الإنجاز الإجمالية لهذه الفترة")
+        Text(text = stringResource(R.string.stats_overall))
     }
 }
 
